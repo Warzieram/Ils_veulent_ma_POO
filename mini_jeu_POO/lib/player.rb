@@ -13,19 +13,19 @@ class Player
   end
 
   def show_state
-    puts "#{@name} a #{@hp} points de vie"
+    puts "\n#{@name} a #{@hp} points de vie"
   end
 
   def gets_damage(n)
     @hp -= n
     if (@hp <= 0)
-      puts "Le joueur #{@name} a été tué !"
+      puts "\nLe joueur #{@name} a été tué !"
     end
   end
 
   def attacks(player)
     damage = compute_damage
-    puts "#{@name} attaque le joueur #{player.name}"
+    puts "\n#{@name} attaque le joueur #{player.name}"
     puts "il lui inflige #{damage} points de dommages\n\n"
     player.gets_damage(damage)
     
@@ -54,7 +54,7 @@ class HumanPlayer < Player
 
   def search_weapon
     new_weapon_level = rand(1..6)
-    puts "Tu as trouvé une arme de niveau #{new_weapon_level}"
+    puts "\nTu as trouvé une arme de niveau #{new_weapon_level}"
 
     if new_weapon_level > @weapon_level
       puts "Youhou ! elle est meilleure que ton arme actuelle: tu la prends."

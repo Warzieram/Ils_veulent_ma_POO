@@ -16,6 +16,7 @@ message_de_bienvenue =
 
 
 
+
 puts message_de_bienvenue
 puts "Veuillez entrer votre prénom: "
 print "> "
@@ -37,8 +38,7 @@ while game.is_still_going? do
 
   game.new_players_in_sight
   game.show_players
-  print game.menu
-  user_choice = gets.chomp
+  user_choice = game.menu
   game.menu_choice(user_choice)
   if game.is_still_going? 
     game.ennemies_attack

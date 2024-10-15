@@ -9,3 +9,4 @@ gem 'pry'
 # Si tu utilises RSpec pour tester ton code
 gem 'rspec'
 
+gem "tty-prompt"

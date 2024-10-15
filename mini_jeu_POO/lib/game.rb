@@ -1,10 +1,13 @@
 require_relative './player'
+require "tty-prompt"
+
 
 class Game
   def initialize(name, n_ennemies)
     @human_player = HumanPlayer.new(name)
     @ennemies_in_sight = []
     @players_left = n_ennemies
+    @prompt = TTY::Prompt.new
   end
 
   def ennemies
@@ -28,32 +31,27 @@ class Game
   end
 
   def menu
-    menu = 
-    "
-     ﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏﹏
-    |                                   |
-    |Quelle action veux-tu effectuer ?  |
-    |a - Chercher une meilleure arme    |
-    |s - Chercher à se soigner          |
-    |                                   |
-    |Attaquer un joueur en vue :        |\n"     
-  
-  
-  
-    for i in 0..@ennemies_in_sight.length-1 do
-      ennemy = @ennemies_in_sight[i]
-      str = "    | #{i} - #{ennemy.name} a #{ennemy.life_points} points de vie"
-      menu +=  str + " " * (40 - str.length) + "|\n"
+    if @ennemies_in_sight.length > 0
+      options = {"Effectuer une action": 1, "Effectuer une attaque": 2}
+    else
+      options = {"Effectuer une action": 1}
     end
-  
-    menu += "    ﹋﹋﹋﹋﹋﹋﹋﹋﹋﹋﹋﹋﹋﹋﹋﹋﹋﹋ \n"
-    menu += "\n> "
-    return menu
+    menu = @prompt.select("\nQue veux-tu faire ?", options)
+
+    case menu
+    when 1
+      options = {"Checher une arme": -1, "Chercher à se soigner": -2}
+      choix = @prompt.select("Quelle action ?", options)
+    when 2
+      options = @ennemies_in_sight.each_with_index.to_h {|element, index| [element.name, index]}
+      choix = @prompt.select("Quel ennemi ?", options).to_s
+      
+    end
+    return choix
   end
 
   def press_enter_to_continue
-    print "Appuyez sur entrée pour continuer. . ."
-    gets.chomp
+    @prompt.keypress("Appuyer sur entrée pour continuer", keys: [:return])
     print "\n"
   end
 
@@ -64,11 +62,11 @@ class Game
     while !valid_choice
 
       case user_choice
-      when "a"
+      when -1
         @human_player.search_weapon
         valid_choice = true
         press_enter_to_continue
-      when "s"
+      when -2
         @human_player.search_health_pack
         valid_choice = true
         press_enter_to_continue
@@ -105,10 +103,39 @@ class Game
     print "\n"
     puts "La partie est finie !"
 
+    winner_message = "
+    
+
+ _     _  ___   __    _  __    _  _______  ______   
+| | _ | ||   | |  |  | ||  |  | ||       ||    _ |  
+| || || ||   | |   |_| ||   |_| ||    ___||   | ||  
+|       ||   | |       ||       ||   |___ |   |_||_ 
+|       ||   | |  _    ||  _    ||    ___||    __  |
+|   _   ||   | | | |   || | |   ||   |___ |   |  | |
+|__| |__||___| |_|  |__||_|  |__||_______||___|  |_|
+
+"
+
+    loser_message = "
+
+
+ ___      _______  _______  _______  ______   
+ |   |    |       ||       ||       ||    _ |  
+ |   |    |   _   ||  _____||    ___||   | ||  
+ |   |    |  | |  || |_____ |   |___ |   |_||_ 
+ |   |___ |  |_|  ||_____  ||    ___||    __  |
+ |       ||       | _____| ||   |___ |   |  | |
+ |_______||_______||_______||_______||___|  |_|
+ 
+ 
+    "
+
     if @human_player.life_points > 0
       puts "BRAVO TU AS GAGNÉ !!"
+      print winner_message
     else
       puts "DOMMAGE TU AS PERDU ! (git gud)"
+      print loser_message
     
     end
   end
