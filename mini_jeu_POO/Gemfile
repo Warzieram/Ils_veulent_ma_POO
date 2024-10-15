@@ -1,0 +1,11 @@
+source 'https://rubygems.org'
+
+# Utiliser Bundler pour gérer les gems
+gem 'bundler'
+
+# Gems pour le développement et le débogage
+gem 'pry'
+
+# Si tu utilises RSpec pour tester ton code
+gem 'rspec'
+
