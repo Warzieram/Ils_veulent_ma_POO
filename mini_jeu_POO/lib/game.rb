@@ -3,6 +3,8 @@ require "tty-prompt"
 
 
 class Game
+
+  attr_accessor :human_player, :ennemies_in_sight, :players_left
   def initialize(name, n_ennemies)
     @human_player = HumanPlayer.new(name)
     @ennemies_in_sight = []
